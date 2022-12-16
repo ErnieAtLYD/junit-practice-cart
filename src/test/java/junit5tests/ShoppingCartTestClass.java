@@ -36,10 +36,10 @@ public class ShoppingCartTestClass {
     @Test
     void testAddProductCostToCartBalance(){
         ShoppingCart cart = new ShoppingCart();
-        var balance = cart.getBalance();
+        double balance = cart.getBalance();
         cart.addItem(new Product("foo", 2.0));
 
-        Assertions.assertEquals(cart.getBalance(), balance);
+        Assertions.assertEquals(cart.getBalance(), balance+2.0);
     }
 
     @Test
@@ -61,5 +61,35 @@ public class ShoppingCartTestClass {
         }
     }
 
+    @Test
+    void testDecreaseItemsWhenRemoved(){
+        ShoppingCart cart = new ShoppingCart();
 
+        cart.addItem(new Product("bla", 5.0));
+        Product product = new Product("foo", 2.3);
+        cart.addItem(product);
+
+        try {
+            cart.removeItem(product);
+        } catch (ProductNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            Assertions.assertEquals(cart.getItemCount(), 1);
+        }
+    }
+
+    @Test
+    void testProductNotFoundException(){
+        ShoppingCart cart = new ShoppingCart();
+
+        Product product = new Product("foo", 2.3);
+
+        try {
+            cart.removeItem(product);
+            Assertions.fail();
+        }catch (ProductNotFoundException e) {
+        }
+
+    }
 }
